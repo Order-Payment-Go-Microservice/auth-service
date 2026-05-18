@@ -42,7 +42,7 @@ func Load() *Config {
 
 	return &Config{
 		GRPC: GRPCConfig{
-			Port: getEnv("GRPC_PORT", "50052"),
+			Port: getEnv("GRPC_PORT", "50056"),
 		},
 		Redis: RedisConfig{
 			Host:     getEnv("REDIS_HOST", "localhost"),
@@ -57,7 +57,7 @@ func Load() *Config {
 		},
 		UserService: UserServiceConfig{
 			Host: getEnv("USER_SERVICE_HOST", "localhost"),
-			Port: getEnv("USER_SERVICE_PORT", "50051"),
+			Port: getEnv("USER_SERVICE_PORT", "50052"),
 		},
 	}
 }
