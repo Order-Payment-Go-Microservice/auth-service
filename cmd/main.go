@@ -22,7 +22,6 @@ import (
 func main() {
 	cfg := config.Load()
 
-	// Redis
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", cfg.Redis.Host, cfg.Redis.Port),
 		Password: cfg.Redis.Password,
@@ -33,7 +32,6 @@ func main() {
 	}
 	log.Println("connected to redis")
 
-	// User-service gRPC client
 	userAddr := fmt.Sprintf("%s:%s", cfg.UserService.Host, cfg.UserService.Port)
 	userConn, err := grpc.NewClient(userAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -42,14 +40,11 @@ func main() {
 	defer userConn.Close()
 	userClient := userv1.NewUserServiceClient(userConn)
 
-	// JWT manager
 	jwtManager := jwtpkg.NewManager(cfg.JWT.Secret, cfg.JWT.AccessTokenTTL, cfg.JWT.RefreshTokenTTL)
 
-	// Usecase + handler
 	authUC := usecase.NewAuthUsecase(userClient, jwtManager, rdb)
 	handler := grpcHandler.NewAuthHandler(authUC)
 
-	// gRPC server
 	grpcServer := grpc.NewServer()
 	authv1.RegisterAuthServiceServer(grpcServer, handler)
 	reflection.Register(grpcServer)

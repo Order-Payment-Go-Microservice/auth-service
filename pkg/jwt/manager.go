@@ -15,7 +15,7 @@ var (
 type Claims struct {
 	UserID    string `json:"user_id"`
 	Email     string `json:"email"`
-	TokenType string `json:"token_type"` // "access" or "refresh"
+	TokenType string `json:"token_type"`
 	jwt.RegisteredClaims
 }
 
